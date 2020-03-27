@@ -49,6 +49,7 @@ public class TreeViewController implements Initializable{
 		nodeD.getChildren().addAll(nodeD1,nodeD2,nodeD3);
 		
 		treeView.setRoot(root);
+		treeView.setShowRoot(false);
 		
 	}
 
