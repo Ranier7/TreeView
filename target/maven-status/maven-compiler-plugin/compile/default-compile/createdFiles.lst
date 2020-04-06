@@ -1,2 +1,3 @@
 application\MainApp.class
 application\view\TreeViewController.class
+br\com\address\model\Model.class

@@ -1,8 +1,17 @@
 package application.view;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import br.com.address.model.Model;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
@@ -15,7 +24,68 @@ public class TreeViewController implements Initializable{
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		TreeItem<String> root = new TreeItem<>("Portfólio");
+		
+		try {
+            String url = "http://localhost:8080/api/modelos";
+
+            HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            if (conn.getResponseCode() != 200) {
+                System.out.println("Erro " + conn.getResponseCode() + " ao obter dados da URL " + url);
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+
+            String line = br.readLine();
+            
+            conn.disconnect();
+
+            Gson gson = new Gson();
+            TypeToken typeToken = new TypeToken<List<Model>>() {};
+            
+            List<Model> model = gson.fromJson(line, typeToken.getType());
+
+            TreeItem<String> root = new TreeItem<>("Portfólio");
+            
+            TreeItem<String> nodeA = new TreeItem<>("Linha Apolo");
+    		TreeItem<String> nodeB = new TreeItem<>("Linha Cronos");
+    		TreeItem<String> nodeC = new TreeItem<>("Linha Ares");
+    		TreeItem<String> nodeD = new TreeItem<>("Linha Zeus");
+    		
+    		for(Model modelo : model) {
+    			
+    			String linha = modelo.getLinha();
+    			
+    			if(linha.contentEquals("Apolo")) {
+    				nodeA.getChildren().addAll(new TreeItem<String>(modelo.getModelo()));
+    			}
+    			if(linha.contentEquals("Cronos")) {
+    				nodeB.getChildren().addAll(new TreeItem<String>(modelo.getModelo()));
+    			}
+    			if(linha.contentEquals("Ares")) {
+    				nodeC.getChildren().addAll(new TreeItem<String>(modelo.getModelo()));
+    			}
+    			if(linha.contentEquals("Zeus")) {
+    				nodeD.getChildren().addAll(new TreeItem<String>(modelo.getModelo()));
+    			}
+    			
+    		}
+    		
+    		root.getChildren().addAll(nodeA,nodeB,nodeC,nodeD);
+    		treeView.setRoot(root);
+    		treeView.setShowRoot(false);
+    		
+        } catch (IOException e) {
+            System.out.println("Sem conexão!");
+        }
+    
+		
+		
+		
+		/*TreeItem<String> root = new TreeItem<>("Portfólio");
 		
 		TreeItem<String> nodeA = new TreeItem<>("Linha Apolo");
 		TreeItem<String> nodeB = new TreeItem<>("Linha Cronos");
@@ -49,7 +119,7 @@ public class TreeViewController implements Initializable{
 		nodeD.getChildren().addAll(nodeD1,nodeD2,nodeD3);
 		
 		treeView.setRoot(root);
-		treeView.setShowRoot(false);
+		treeView.setShowRoot(false);*/
 		
 	}
 
