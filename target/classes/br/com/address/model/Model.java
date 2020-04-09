@@ -2,15 +2,16 @@ package br.com.address.model;
 
 public class Model {
 	
+	private long id;
 	private String linha;
 	private String modelo;
 	
-	public Model(String linha, String modelo) {
-		super();
-		this.linha = linha;
-		this.modelo = modelo;
+	public long getId() {
+		return id;
 	}
-	
+	public void setId(long id) {
+		this.id = id;
+	}
 	public String getLinha() {
 		return linha;
 	}
@@ -23,5 +24,7 @@ public class Model {
 	public void setModelo(String modelo) {
 		this.modelo = modelo;
 	}
+	
+	
 	
 }
